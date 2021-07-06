@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-
+import {StyleSheet, View} from 'react-native';
 import { Header } from '../components/Header';
 import { MyTasksList } from '../components/MyTasksList';
 import { TodoInput } from '../components/TodoInput';
+import { ThemeDark } from '../components/ThemeDark';
 
 interface Task {
   id: number;
@@ -12,6 +13,7 @@ interface Task {
 
 export function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [isDark, setIsDark] = useState(false);
 
   function handleAddTask(newTaskTitle: string) {
     //TODO - add new task if it's not empty
@@ -42,19 +44,30 @@ export function Home() {
       task => task.id !== id
     ));
   }
-  console.log(tasks)
   
   return (
-    <>
-      <Header />
+    <View style={[style.container, isDark ? {backgroundColor: '#191622'} : { backgroundColor: '#fff'} ]}>
+      <Header dark={isDark} />
 
-      <TodoInput addTask={handleAddTask} />
+      <TodoInput dark={isDark} addTask={handleAddTask} />
 
       <MyTasksList
+        dark={isDark}
         tasks={tasks}
         onPress={handleMarkTaskAsDone}
         onLongPress={handleRemoveTask}
       />
-    </>
+
+      <ThemeDark 
+        onPress={() => setIsDark(!isDark)}
+        dark={isDark}
+      />
+    </View>
   )
 }
+
+const style = StyleSheet.create({
+  container: {
+    flex: 1,
+  }
+})
